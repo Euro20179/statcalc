@@ -4,6 +4,11 @@
 #include <iostream>
 #include <map>
 
+//ERROR CODES:
+//0: success
+//1: general error
+//3: invalid action
+
 struct ModeReturn {
     double value;
     unsigned long long int amount;
@@ -101,24 +106,29 @@ int main(int argc, char** argv){
 
     for(int i = 1; i < argc; i++){
         std::cout << argv[i] << ": ";
-        if(std::string(argv[i]) == "mean"){
+        std::string action = argv[i];
+        if(action == "mean"){
             std::cout << calculateMean(numbers, numberCount) << std::endl;
         }
-        else if(std::string(argv[i]) == "sum"){
+        else if(action == "sum"){
             std::cout << calculateSum(numbers, numberCount) << std::endl;
         }
-        else if(std::string(argv[i]) == "max"){
+        else if(action == "max"){
             std::cout << calculateMax(numbers, numberCount) << std::endl;
         }
-        else if(std::string(argv[i]) == "mode"){
+        else if(action == "mode"){
             ModeReturn mode = calculateMode(numbers, numberCount);
             std::cout << mode.value << " (" << mode.amount << ")" << std::endl;
         }
-        else if(std::string(argv[i]) == "min"){
+        else if(action == "min"){
             std::cout << calculateMin(numbers, numberCount) << std::endl;
         }
         else{
-            std::cout << "\033[31mError: " + std::string(argv[i]) + " is not a valid action" << std::endl;
+            for(int i = 0; i < action.size() + 2; i++){
+                std::cerr << "\b";
+            }
+            std::cerr << "\033[31mError: " + std::string(argv[i]) + " is not a valid action" << std::endl;
+            return 3;
         }
     }
 
