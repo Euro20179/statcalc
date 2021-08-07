@@ -1,6 +1,6 @@
 make:
-	g++ stat.cpp -o stat
-	chmod +x stat
+	g++ statcalc.cpp -o statcalc
+	chmod +x statcalc
 install:
-	sudo cp stat /usr/local/bin/stat
+	sudo cp statcalc /usr/local/bin/statcalc
 .PHONY: make

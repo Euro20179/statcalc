@@ -101,21 +101,20 @@ int main(int argc, char** argv){
 
     for(int i = 1; i < argc; i++){
         std::cout << argv[i] << ": ";
-        std::string action = argv[i];
-        if(action == "mean"){
+        if(std::string(argv[i]) == "mean"){
             std::cout << calculateMean(numbers, numberCount) << std::endl;
         }
-        else if(action == "sum"){
+        else if(std::string(argv[i]) == "sum"){
             std::cout << calculateSum(numbers, numberCount) << std::endl;
         }
-        else if(action == "max"){
+        else if(std::string(argv[i]) == "max"){
             std::cout << calculateMax(numbers, numberCount) << std::endl;
         }
-        else if(action == "mode"){
+        else if(std::string(argv[i]) == "mode"){
             ModeReturn mode = calculateMode(numbers, numberCount);
             std::cout << mode.value << " (" << mode.amount << ")" << std::endl;
         }
-        else if(action == "min"){
+        else if(std::string(argv[i]) == "min"){
             std::cout << calculateMin(numbers, numberCount) << std::endl;
         }
         else{
