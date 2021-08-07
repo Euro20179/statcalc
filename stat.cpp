@@ -86,17 +86,14 @@ int main(int argc, char** argv){
     int numberIndex = 0;
     std::string currNum;
     for(int i = 0; i < input.size(); i++){
-        currNum += input[i];
-        if(input[i] == ' '){
+        //if is delimiter or last number, convert currNum to double
+        if(input[i] == ' ' || input[i + 1] == '\0'){
             numbers[numberIndex] = atof(currNum.c_str());
             numberIndex++;
             currNum = "";
+            continue;
         }
-    }
-    if(currNum != ""){
-	    numbers[numberIndex] = atof(currNum.c_str());
-	    numberIndex++;
-	    currNum = "";
+        currNum += input[i];
     }
 
     for(int i = 1; i < argc; i++){
