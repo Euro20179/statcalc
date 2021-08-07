@@ -15,6 +15,7 @@ struct ModeReturn {
 };
 
 static std::string input;
+static char delimiter = ' ';
 
 void readStdin(){
     char ch;
@@ -24,9 +25,9 @@ void readStdin(){
 }
 
 int getNumCount(){
-    int numberCount = 1;
+    int numberCount = 0;
     for(int i = 0; i < input.size(); i++){
-        if(input[i] == ' '){
+        if(input[i] == delimiter || input[i + 1] == '\0'){
             numberCount++;
         }
     }
@@ -81,27 +82,41 @@ ModeReturn calculateMode(double numbs[], size_t size){
     return {largest, max};
 }
 
+void parseOpts(int& argc, char**& argv){
+    int c;
+    while((c = getopt(argc, argv, "d:")) != -1){
+        switch(c){
+            case 'd':
+                delimiter = *optarg;
+                break;
+        }
+    }
+    argc -= optind - 1;
+    argv += optind - 1;
+}
+
 int main(int argc, char** argv){
     //read stdin
     readStdin();
+    parseOpts(argc, argv);
+
     int numberCount = getNumCount();
+    if(numberCount == 0){
+        std::cerr << "No numbers provided" << std::endl;
+        return 1;
+    }
 
     //convert numbers into doubles, and put into list
     double numbers[numberCount];
     int numberIndex = 0;
     std::string currNum;
     for(int i = 0; i < input.size(); i++){
-        currNum += input[i];
-        if(input[i] == ' '){
+        if(input[i] == delimiter || input[i + 1] == '\0'){
             numbers[numberIndex] = atof(currNum.c_str());
             numberIndex++;
             currNum = "";
         }
-    }
-    if(currNum != ""){
-	    numbers[numberIndex] = atof(currNum.c_str());
-	    numberIndex++;
-	    currNum = "";
+        else currNum += input[i];
     }
 
     for(int i = 1; i < argc; i++){
