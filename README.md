@@ -6,14 +6,6 @@ Stat is a commandline utility that calculates statistical information about a se
 
 numbers MUST be separated by a space
 
-echo numbers... | stat [options...] actions...
+`echo numbers... | stat [options...] actions...`
 
 * numbers must be passed in throgh stdin
-* actions can be:
-    * mean
-    * mode
-    * max
-    * min
-    * sum
-    * sortmin
-    * sortmax
