@@ -14,6 +14,11 @@ struct ModeReturn {
     unsigned long long int amount;
 };
 
+static char outputDelim = ' ';
+static char outputActionDelim = '\n';
+
+static bool quiet = false;
+
 static std::string input;
 static char delimiter = ' ';
 
@@ -122,12 +127,15 @@ Actions:\n\
     sortmin\n\
     sortmax\n\
 Options:\n\
+    -q:		Do not print the leading 'action:'\
+    -D arg:	The delimiter to use for the output between numbers\
+    -A arg:	The delimiter to use for the output between actions\
     -d arg: 	The delimiter to use as separater between numbers (default is space)" << std::endl;
 }
 
 void parseOpts(int& argc, char**& argv){
     int c;
-    while((c = getopt(argc, argv, "d:h")) != -1){
+    while((c = getopt(argc, argv, "d:hqD:A:")) != -1){
         switch(c){
             case 'd':
                 delimiter = *optarg;
@@ -135,6 +143,15 @@ void parseOpts(int& argc, char**& argv){
 	    case 'h':
 		helpinfo();
 		exit(0);
+	    case 'q':
+		quiet = true;
+		break;
+	    case 'D':
+		outputDelim = *optarg;
+		break;
+	    case 'A':
+		outputActionDelim = *optarg;
+		break;
         }
     }
     argc -= optind - 1;
@@ -166,37 +183,37 @@ int main(int argc, char** argv){
     }
 
     for(int i = 1; i < argc; i++){
-        std::cout << argv[i] << ": ";
+        if(!quiet) std::cout << argv[i] << ": ";
         std::string action = argv[i];
         if(action == "mean"){
-            std::cout << calculateMean(numbers, numberCount) << std::endl;
+            std::cout << calculateMean(numbers, numberCount) << outputActionDelim;
         }
         else if(action == "sum"){
-            std::cout << calculateSum(numbers, numberCount) << std::endl;
+            std::cout << calculateSum(numbers, numberCount) << outputActionDelim;
         }
         else if(action == "max"){
-            std::cout << calculateMax(numbers, numberCount) << std::endl;
+            std::cout << calculateMax(numbers, numberCount) << outputActionDelim;
         }
         else if(action == "mode"){
             ModeReturn mode = calculateMode(numbers, numberCount);
-            std::cout << mode.value << " (" << mode.amount << ")" << std::endl;
+            std::cout << mode.value << " (" << mode.amount << ")" << outputActionDelim;
         }
         else if(action == "min"){
-            std::cout << calculateMin(numbers, numberCount) << std::endl;
+            std::cout << calculateMin(numbers, numberCount) << outputActionDelim;
         }
         else if(action == "sortmax"){
             calculateSortMax(numbers, numberCount);
             for(double i : numbers){
-                std::cout << i << ' ';
+                std::cout << i << outputDelim;
             }
-            std::cout << '\n';
+            std::cout << outputActionDelim;
         }
         else if(action == "sortmin"){
             calculateSortMin(numbers, numberCount);
             for(double i : numbers){
                 std::cout << i << ' ';
             }
-            std::cout << '\n';
+            std::cout << outputActionDelim;
         }
         else{
             for(int i = 0; i < action.size() + 2; i++){
