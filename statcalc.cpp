@@ -107,6 +107,14 @@ double calculateMean(double numbs[], size_t size){
     return calculateSum(numbs, size) / size;
 }
 
+double calculateMedian(double numbs[], size_t size){
+    numbs = calculateSortMin(numbs, size);
+    if(size % 2 == 1){
+	return numbs[size/2];
+    }
+    return (numbs[size/2]+numbs[size/2+1]) / 2;
+}
+
 ModeReturn calculateMode(double numbs[], size_t size){
     std::map<double, int> counts;
     for(int i = 0; i < size; i++){
@@ -205,6 +213,9 @@ int main(int argc, char** argv){
         if(action == "mean"){
             std::cout << calculateMean(numbers, numberCount) << outputActionDelim << std::flush;
         }
+	else if(action == "median"){
+	    std::cout << calculateMedian(numbers, numberCount) << outputActionDelim << std::flush;
+	}
         else if(action == "sum"){
             std::cout << calculateSum(numbers, numberCount) << outputActionDelim << std::flush;
         }
