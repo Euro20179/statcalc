@@ -58,6 +58,35 @@ double calculateMin(double numbs[], size_t size){
     return min;
 }
 
+template<class item1, class item2>
+void swap(item1* one, item2* two){
+    int temp = *one;
+    *one = *two;
+    *two = temp;
+}
+
+double* calculateSortMin(double numbs[], size_t size){
+    int i, j;
+    for(i = 0; i < size - 1; i++)
+    for(j = 0; j < size - i - 1; j++){
+        if(numbs[j] > numbs[j+1]){
+            swap<double, double>(&numbs[j], &numbs[j+1]);
+        }
+    }
+    return numbs;
+}
+double* calculateSortMax(double numbs[], size_t size){
+    int i, j;
+    for(i = 0; i < size -1; i++){
+        for(j = 0; j < size - i - 1; j++){
+            if(numbs[j] < numbs[j+1]){
+                swap<double, double>(&numbs[j], &numbs[j+1]);
+            }
+        }
+    }
+    return numbs;
+}
+
 double calculateMean(double numbs[], size_t size){
     return calculateSum(numbs, size) / size;
 }
@@ -82,13 +111,30 @@ ModeReturn calculateMode(double numbs[], size_t size){
     return {largest, max};
 }
 
+void helpinfo(){
+    std::cout << "USAGE: statcalc [options...] actions...\n\
+Numbers must be passed in through stdin. Non numbers are ignored but must be connected to the number eg: 1m\n\
+Actions:\n\
+    mean\n\
+    mode\n\
+    min\n\
+    max\n\
+    sortmin\n\
+    sortmax\n\
+Options:\n\
+    -d arg: 	The delimiter to use as separater between numbers (default is space)" << std::endl;
+}
+
 void parseOpts(int& argc, char**& argv){
     int c;
-    while((c = getopt(argc, argv, "d:")) != -1){
+    while((c = getopt(argc, argv, "d:h")) != -1){
         switch(c){
             case 'd':
                 delimiter = *optarg;
                 break;
+	    case 'h':
+		helpinfo();
+		exit(0);
         }
     }
     argc -= optind - 1;
@@ -96,9 +142,9 @@ void parseOpts(int& argc, char**& argv){
 }
 
 int main(int argc, char** argv){
+    parseOpts(argc, argv);
     //read stdin
     readStdin();
-    parseOpts(argc, argv);
 
     int numberCount = getNumCount();
     if(numberCount == 0){
@@ -138,6 +184,20 @@ int main(int argc, char** argv){
         else if(action == "min"){
             std::cout << calculateMin(numbers, numberCount) << std::endl;
         }
+        else if(action == "sortmax"){
+            calculateSortMax(numbers, numberCount);
+            for(double i : numbers){
+                std::cout << i << ' ';
+            }
+            std::cout << '\n';
+        }
+        else if(action == "sortmin"){
+            calculateSortMin(numbers, numberCount);
+            for(double i : numbers){
+                std::cout << i << ' ';
+            }
+            std::cout << '\n';
+        }
         else{
             for(int i = 0; i < action.size() + 2; i++){
                 std::cerr << "\b";
@@ -146,6 +206,5 @@ int main(int argc, char** argv){
             return 3;
         }
     }
-
     return 0;
 }
