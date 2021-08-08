@@ -1,6 +1,5 @@
 #include <string>
 #include "unistd.h"
-#include "stdlib.h"
 #include <iostream>
 #include <map>
 
@@ -100,11 +99,13 @@ ModeReturn calculateMode(double numbs[], size_t size){
     std::map<double, int> counts;
     for(int i = 0; i < size; i++){
         double curr = numbs[i];
-        if(counts.find(curr) != counts.end()){
-            counts[curr]++;
-        }
-        else counts[curr] = 1;
+	try{
+	    counts[curr]++;
+	} catch(int e){
+	    counts[curr] = 1;
+	}
     }
+    //i mean they could have a ton of numbers ¯\_(ツ)_/¯
     unsigned long long int max = 0;
     double largest;
     for(auto item = counts.begin(); item != counts.end(); item++){
@@ -117,6 +118,7 @@ ModeReturn calculateMode(double numbs[], size_t size){
 }
 
 void helpinfo(){
+    //possibly not the best way to make a help menu, but this is the way i like to make a help menu
     std::cout << "USAGE: statcalc [options...] actions...\n\
 Numbers must be passed in through stdin. Non numbers are ignored but must be connected to the number eg: 1m\n\
 Actions:\n\
@@ -219,7 +221,7 @@ int main(int argc, char** argv){
             for(int i = 0; i < action.size() + 2; i++){
                 std::cerr << "\b";
             }
-            std::cerr << "\033[31mError: " + std::string(argv[i]) + " is not a valid action" << std::endl;
+            std::cerr << "\033[31mError: " + std::string(argv[i]) + " is not a valid action\033[0m" << std::endl;
             return 3;
         }
     }

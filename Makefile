@@ -1,6 +1,8 @@
+PROGNAME=statcalc
+
 make:
-	g++ statcalc.cpp -o statcalc
-	chmod +x statcalc
+	g++ -O3 statcalc.cpp -o $(PROGNAME)
+	chmod +x $(PROGNAME)
 install:
-	sudo cp statcalc /usr/local/bin/statcalc
+	sudo cp $(PROGNAME) /usr/local/bin/$(PROGNAME)
 .PHONY: make
