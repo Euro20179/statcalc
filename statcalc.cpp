@@ -38,6 +38,18 @@ int getNumCount(){
     return numberCount;
 }
 
+void applyFunction(double numbs[], size_t size, std::string function){
+    for(int i = 0; i < size; i++){
+	std::string fnCopy = function;
+	size_t pos;
+	while((pos = fnCopy.find("{}")) != function.npos){
+	    fnCopy.replace(pos, 2, std::to_string(numbs[i]));
+	}
+	system(fnCopy.c_str());
+    }
+    std::cout << outputActionDelim << std::flush;
+}
+
 double calculateSum(double numbs[], size_t size){
     double sum;
     for(int i = 0; i < size; i++){
@@ -119,8 +131,9 @@ ModeReturn calculateMode(double numbs[], size_t size){
 
 void helpinfo(){
     //possibly not the best way to make a help menu, but this is the way i like to make a help menu
-    std::cout << "USAGE: statcalc [options...] actions...\n\
+    std::cout << "USAGE: statcalc [options...] actions... [args...]\n\
 Numbers must be passed in through stdin. Non numbers are ignored but must be connected to the number eg: 1m\n\
+Some actions have arguments that are placed after the action\n\
 Actions:\n\
     mean\n\
     mode\n\
@@ -128,6 +141,8 @@ Actions:\n\
     max\n\
     sortmin\n\
     sortmax\n\
+    exec shellcmd\n\
+	{} gets replaced with the number\n\
 Options:\n\
     -q:		Do not print the leading 'action:'\n\
     -D arg:	The delimiter to use for the output between numbers\n\
@@ -185,37 +200,42 @@ int main(int argc, char** argv){
     }
 
     for(int i = 1; i < argc; i++){
-        if(!quiet) std::cout << argv[i] << ": ";
+        if(!quiet) std::cout << argv[i] << ": " << std::flush;
         std::string action = argv[i];
         if(action == "mean"){
-            std::cout << calculateMean(numbers, numberCount) << outputActionDelim;
+            std::cout << calculateMean(numbers, numberCount) << outputActionDelim << std::flush;
         }
         else if(action == "sum"){
-            std::cout << calculateSum(numbers, numberCount) << outputActionDelim;
+            std::cout << calculateSum(numbers, numberCount) << outputActionDelim << std::flush;
         }
         else if(action == "max"){
-            std::cout << calculateMax(numbers, numberCount) << outputActionDelim;
+            std::cout << calculateMax(numbers, numberCount) << outputActionDelim << std::flush;
         }
         else if(action == "mode"){
             ModeReturn mode = calculateMode(numbers, numberCount);
-            std::cout << mode.value << " (" << mode.amount << ")" << outputActionDelim;
+            std::cout << mode.value << " (" << mode.amount << ")" << outputActionDelim << std::flush;
         }
         else if(action == "min"){
-            std::cout << calculateMin(numbers, numberCount) << outputActionDelim;
+            std::cout << calculateMin(numbers, numberCount) << outputActionDelim << std::flush;
         }
+	else if(action == "exec"){
+	    //shift forward
+	    i++;
+	    applyFunction(numbers, numberCount, argv[i]);
+	}
         else if(action == "sortmax"){
             calculateSortMax(numbers, numberCount);
             for(double i : numbers){
-                std::cout << i << outputDelim;
+                std::cout << i << outputDelim << std::flush;
             }
-            std::cout << outputActionDelim;
+            std::cout << outputActionDelim << std::flush;
         }
         else if(action == "sortmin"){
             calculateSortMin(numbers, numberCount);
             for(double i : numbers){
                 std::cout << i << ' ';
             }
-            std::cout << outputActionDelim;
+            std::cout << outputActionDelim << std::flush;
         }
         else{
             for(int i = 0; i < action.size() + 2; i++){
