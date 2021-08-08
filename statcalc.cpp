@@ -129,9 +129,9 @@ Actions:\n\
     sortmin\n\
     sortmax\n\
 Options:\n\
-    -q:		Do not print the leading 'action:'\
-    -D arg:	The delimiter to use for the output between numbers\
-    -A arg:	The delimiter to use for the output between actions\
+    -q:		Do not print the leading 'action:'\n\
+    -D arg:	The delimiter to use for the output between numbers\n\
+    -A arg:	The delimiter to use for the output between actions\n\
     -d arg: 	The delimiter to use as separater between numbers (default is space)" << std::endl;
 }
 
